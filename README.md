@@ -6,15 +6,18 @@ A random gym workout generator that creates personalized workout routines based 
 
 - **Random Workout Generation**: Creates customized workout routines based on user selections
 - **User Preferences**: Select workout type, duration, difficulty level, and target muscle groups
-- **Exercise Database**: Comprehensive collection of exercises with instructions
+- **Exercise Database**: Comprehensive collection of 21 exercises across all muscle groups
 - **Progressive Web App**: Install on mobile devices and use offline
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- **Docker Support**: Containerized for consistent development and deployment
+- **Tested**: Backend API tests using pytest
 
 ## Technology Stack
 
 ### Backend
-- **Python 3.8+**
+- **Python 3.11+**
 - **FastAPI**: Modern, fast web framework for building APIs
+- **Pydantic**: Data validation using Python type annotations
 - **Uvicorn**: ASGI server for running FastAPI
 
 ### Frontend
@@ -23,6 +26,12 @@ A random gym workout generator that creates personalized workout routines based 
 - **JavaScript (Vanilla)**: Interactive functionality without frameworks
 - **PWA**: Service Worker and Web App Manifest for offline capabilities
 
+### Development Tools
+- **UV**: Fast Python package manager
+- **Docker**: Containerization for consistent environments
+- **pytest**: Testing framework for backend API tests
+- **httpx**: HTTP client for testing FastAPI
+
 ## Project Structure
 
 ```
@@ -30,8 +39,9 @@ gym-workout-generator/
 ├── backend/
 │   ├── main.py              # FastAPI application
 │   ├── workout_logic.py     # Workout generation logic
-│   ├── exercises.py         # Exercise database
-│   └── models.py            # Data models
+│   ├── exercises.py         # Exercise database (21 exercises)
+│   ├── models.py            # Pydantic data models
+│   └── test_api.py          # API tests
 ├── frontend/
 │   ├── static/
 │   │   ├── css/
@@ -44,54 +54,107 @@ gym-workout-generator/
 │   ├── templates/
 │   │   └── index.html       # Main HTML template
 │   └── manifest.json        # PWA manifest
-├── requirements.txt         # Python dependencies
-├── .gitignore              # Git ignore file
-└── README.md               # This file
+├── pyproject.toml           # Project dependencies (UV)
+├── Dockerfile               # Docker container configuration
+├── docker-compose.yml       # Docker Compose configuration
+├── .gitignore               # Git ignore file
+└── README.md                # This file
 ```
 
 ## Installation
 
 ### Prerequisites
-- Python 3.8 or higher
-- pip (Python package manager)
+- Python 3.11 or higher
+- [UV](https://github.com/astral-sh/uv) (recommended) or pip
+- Docker (optional, for containerized development)
 - Modern web browser
 
-### Setup Instructions
+### Option 1: Using UV (Recommended)
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/YOUR-USERNAME/gym-workout-generator.git
+   cd gym-workout-generator
+   ```
+
+2. **Install UV** (if not already installed)
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+
+3. **Install dependencies**
+   ```bash
+   uv sync --all-extras
+   ```
+
+4. **Run the application**
+   ```bash
+   cd backend
+   uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+5. **Access the application**
+   - Open your browser and navigate to `http://localhost:8000`
+
+### Option 2: Using Docker
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/gym-workout-generator.git
+   cd gym-workout-generator
+   ```
+
+2. **Build and run with Docker Compose**
+   ```bash
+   docker-compose up --build
+   ```
+
+3. **Access the application**
+   - Open your browser and navigate to `http://localhost:8000`
+
+### Option 3: Using pip (Traditional)
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/gym-workout-generator.git
    cd gym-workout-generator
    ```
 
 2. **Create a virtual environment**
    ```bash
    python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. **Activate the virtual environment**
-   - On macOS/Linux:
-     ```bash
-     source venv/bin/activate
-     ```
-   - On Windows:
-     ```bash
-     venv\Scripts\activate
-     ```
-
-4. **Install dependencies**
+3. **Install dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-5. **Run the application**
+4. **Run the application**
    ```bash
    cd backend
    uvicorn main:app --reload --host 0.0.0.0 --port 8000
    ```
 
-6. **Access the application**
-   - Open your browser and navigate to `http://localhost:8000`
+## Testing
+
+### Run tests locally with UV
+```bash
+cd backend
+uv run pytest test_api.py -v
+```
+
+### Run tests with Docker
+```bash
+docker-compose run app uv run pytest backend/test_api.py -v
+```
+
+### Run tests with pip/venv
+```bash
+cd backend
+pytest test_api.py -v
+```
 
 ## Usage
 

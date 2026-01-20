@@ -23,4 +23,32 @@ class MuscleGroup(str, Enum):
     CORE = "core"
     FULL_BODY = "full_body"
 
-    
+class WorkoutRequest(BaseModel):
+    workout_type: WorkoutType
+    duration: int = Field(ge=15, le=120, description="Workout duration in minutes")
+    difficulty: DifficultyLevel
+    target_muscles: Optional[List[MuscleGroup]] = None
+
+class Exercise(BaseModel):
+    name: str
+    muscle_group: MuscleGroup
+    difficulty: DifficultyLevel
+    sets: int
+    reps: Optional[int] = None
+    duration: Optional[int] = None  # in seconds, for cardio/timed exercises
+    rest: int  # rest time in seconds
+    instructions: str
+    equipment: Optional[str] = None
+
+
+class WorkoutResponse(BaseModel):
+    workout_id: str
+    workout_type: WorkoutType
+    difficulty: DifficultyLevel
+    exercises: List[Exercise]
+    estimated_duration: int
+    total_exercises: int
+    calories_estimate: int
+
+
+
