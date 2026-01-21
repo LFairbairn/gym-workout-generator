@@ -12,28 +12,68 @@ on:
 
 # What jobs should run?
 jobs:
-  test:
-    # Run on Ubuntu (a Linux server provided free by GitHub)
+  # Job 1: Backend API tests (fast, no Docker needed)
+  backend-tests:
+    name: Backend API Tests
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out (download) your code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # Step 3: Install dependencies
-      # Using pip here for CI simplicity (UV is used locally)
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install fastapi uvicorn[standard] python-multipart pytest httpx
 
-      # Step 4: Run the tests
-      - name: Run tests
+      - name: Run backend tests
         run: pytest backend/test_api.py -v
+
+  # Job 2: Frontend E2E tests (uses Docker Compose for full stack)
+  frontend-tests:
+    name: Frontend E2E Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-playwright
+
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
+      - name: Start services with Docker Compose
+        run: docker compose up -d --build
+
+      - name: Wait for services to be ready
+        run: |
+          echo "Waiting for backend..."
+          timeout 30 bash -c 'until curl -s http://localhost:8000/api/health > /dev/null; do sleep 1; done'
+          echo "Waiting for frontend..."
+          timeout 30 bash -c 'until curl -s http://localhost > /dev/null; do sleep 1; done'
+          echo "Services are ready!"
+
+      - name: Run frontend tests
+        run: pytest tests/test_frontend.py -v
+
+      - name: Show Docker logs on failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Stop services
+        if: always()
+        run: docker compose down
