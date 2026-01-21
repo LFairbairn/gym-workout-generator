@@ -9,28 +9,38 @@ from .exercises import EXERCISE_DATABASE
 
 
 def filter_exercises(
+    workout_type: WorkoutType,
     difficulty: DifficultyLevel,
     target_muscles: Optional[List[MuscleGroup]] = None
 ) -> List[dict]:
-    """Filter exercises based on difficulty and target muscles."""
+    """Filter exercises based on workout type, difficulty and target muscles."""
     filtered = []
-    
+
     for exercise in EXERCISE_DATABASE:
+        # Check workout type - must match
+        # MIXED includes strength, cardio, and HIIT (but not flexibility)
+        if workout_type == WorkoutType.MIXED:
+            if exercise["workout_type"] == WorkoutType.FLEXIBILITY:
+                continue
+        else:
+            if exercise["workout_type"] != workout_type:
+                continue
+
         # Check difficulty - include exercises at or below requested level
         difficulty_order = [DifficultyLevel.BEGINNER, DifficultyLevel.INTERMEDIATE, DifficultyLevel.ADVANCED]
         exercise_level = difficulty_order.index(exercise["difficulty"])
         requested_level = difficulty_order.index(difficulty)
-        
+
         if exercise_level > requested_level:
             continue
-        
+
         # Check muscle group if specified
         if target_muscles:
             if exercise["muscle_group"] not in target_muscles:
                 continue
-        
+
         filtered.append(exercise)
-    
+
     return filtered
 
 def generate_workout(request: WorkoutRequest) -> WorkoutResponse:
@@ -38,6 +48,7 @@ def generate_workout(request: WorkoutRequest) -> WorkoutResponse:
     
     # Filter available exercises
     available_exercises = filter_exercises(
+        workout_type=request.workout_type,
         difficulty=request.difficulty,
         target_muscles=request.target_muscles
     )
