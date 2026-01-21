@@ -21,23 +21,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Install UV (includes Python)
-      - name: Install UV
-        uses: astral-sh/setup-uv@v4
-        with:
-          version: "latest"
-
-      # Step 3: Set up Python with UV
+      # Step 2: Set up Python
       - name: Set up Python
-        run: uv python install 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-      # Step 4: Install dependencies using UV
+      # Step 3: Install dependencies
+      # Using pip here for CI simplicity (UV is used locally)
       - name: Install dependencies
         run: |
-          uv venv
-          uv pip install -e ".[dev]"
+          python -m pip install --upgrade pip
+          pip install fastapi uvicorn[standard] python-multipart pytest httpx
 
-      # Step 5: Run the tests
+      # Step 4: Run the tests
       - name: Run tests
-        run: |
-          uv run pytest backend/test_api.py -v
+        run: pytest backend/test_api.py -v
