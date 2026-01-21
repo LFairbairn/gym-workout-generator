@@ -1,0 +1,39 @@
+# This workflow runs our tests automatically
+# It triggers on every push and pull request to the main branch
+
+name: Run Tests
+
+# When should this workflow run?
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# What jobs should run?
+jobs:
+  test:
+    # Run on Ubuntu (a Linux server provided free by GitHub)
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out (download) your code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Step 3: Install dependencies
+      # Using pip here for CI simplicity (UV is used locally)
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install fastapi uvicorn[standard] python-multipart pytest httpx
+
+      # Step 4: Run the tests
+      - name: Run tests
+        run: pytest backend/test_api.py -v
