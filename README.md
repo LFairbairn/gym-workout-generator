@@ -6,11 +6,12 @@ A random gym workout generator that creates personalized workout routines based 
 
 - **Random Workout Generation**: Creates customized workout routines based on user selections
 - **User Preferences**: Select workout type, duration, difficulty level, and target muscle groups
-- **Exercise Database**: Comprehensive collection of 21 exercises across all muscle groups
+- **Exercise Database**: Comprehensive collection of 60+ exercises across all muscle groups
 - **Progressive Web App**: Install on mobile devices and use offline
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - **Docker Support**: Containerized for consistent development and deployment
-- **Tested**: Backend API tests using pytest
+- **Tested**: Backend API tests and frontend E2E tests using pytest and Playwright
+- **CI/CD**: Automated testing with GitHub Actions on every push and pull request
 
 ## Technology Stack
 
@@ -30,7 +31,9 @@ A random gym workout generator that creates personalized workout routines based 
 - **UV**: Fast Python package manager
 - **Docker**: Containerization for consistent environments
 - **pytest**: Testing framework for backend API tests
+- **Playwright**: Browser automation for frontend E2E tests
 - **httpx**: HTTP client for testing FastAPI
+- **GitHub Actions**: CI/CD pipeline for automated testing
 
 ## Project Structure
 
@@ -39,7 +42,7 @@ gym-workout-generator/
 ├── backend/
 │   ├── main.py              # FastAPI application
 │   ├── workout_logic.py     # Workout generation logic
-│   ├── exercises.py         # Exercise database (21 exercises)
+│   ├── exercises.py         # Exercise database (60+ exercises)
 │   ├── models.py            # Pydantic data models
 │   └── test_api.py          # API tests
 ├── frontend/
@@ -54,8 +57,15 @@ gym-workout-generator/
 │   ├── templates/
 │   │   └── index.html       # Main HTML template
 │   └── manifest.json        # PWA manifest
+├── tests/
+│   ├── conftest.py          # Playwright test fixtures
+│   └── test_frontend.py     # Frontend E2E tests
+├── .github/
+│   └── workflows/
+│       └── test.yml         # GitHub Actions CI pipeline
 ├── pyproject.toml           # Project dependencies (UV)
-├── Dockerfile               # Docker container configuration
+├── Dockerfile.backend       # Backend Docker configuration
+├── Dockerfile.frontend      # Frontend Docker configuration
 ├── docker-compose.yml       # Docker Compose configuration
 ├── .gitignore               # Git ignore file
 └── README.md                # This file
