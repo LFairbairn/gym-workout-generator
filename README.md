@@ -1,5 +1,9 @@
 # Gym Workout Generator
 
+<p align="center">
+  <img src="frontend/static/images/icons/icon-192.png" alt="Gym Workout Generator Icon" width="128" height="128">
+</p>
+
 A random gym workout generator that creates personalized workout routines based on user preferences. Built as a Progressive Web App (PWA) with a Python backend and modern web frontend.
 
 ## Features
