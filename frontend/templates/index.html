@@ -7,6 +7,7 @@
 
     <!-- Link to our CSS file -->
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body>
     <div class="container">
@@ -97,5 +98,20 @@
 
     <!-- Link to our JavaScript file -->
     <script src="/static/js/app.js"></script>
+
+    <!-- Register Service Worker for offline support -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/js/sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
